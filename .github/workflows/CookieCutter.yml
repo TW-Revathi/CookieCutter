@@ -100,7 +100,10 @@ jobs:
       - name: Add Remote and Push to New Repository
         working-directory: ${{ steps.generate_project.outputs.GENERATED_DIR }}
         run: |
-          git remote add origin ${{ env.REPO_URL }}.git
+          GH_PAT="${{ secrets.GH_PAT_FOR_NEW_REPOS }}"
+          AUTHENTICATED_REPO_URL="https://oauth2:${GH_PAT}@github.com/${{ github.repository_owner }}/${{ steps.generate_project.outputs.project_slug }}.git"
+          git remote add origin "$AUTHENTICATED_REPO_URL"
+          echo "Pushing to new repository: $AUTHENTICATED_REPO_URL"
           
           git push -u origin main
         env:
