@@ -69,6 +69,7 @@ jobs:
           cd "${{ steps.generate_project.outputs.GENERATED_DIR }}"
 
       - name: Initialize Git in the Generated Project
+        working-directory: ${{ steps.generate_project.outputs.GENERATED_DIR }}
         run: |
           git init
           git branch -m main
@@ -97,13 +98,14 @@ jobs:
           echo "REPO_URL=$REPO_URL" >> $GITHUB_ENV
 
       - name: Add Remote and Push to New Repository
+        working-directory: ${{ steps.generate_project.outputs.GENERATED_DIR }}
         run: |
           git remote add origin ${{ env.REPO_URL }}.git
           
           git push -u origin main
         env:
           GIT_ASKPASS: "echo ${{ secrets.GH_PAT_FOR_NEW_REPOS }}"
-          GITHUB_TOKEN: ${{ secrets.GH_PAT_FOR_NEW_REPOS }} 
+          GITHUB_TOKEN: ${{ secrets.GH_PAT_FOR_NEW_REPOS }}
 
       - name: Clean Up Generated Temp Directory (Optional)
         run: |
